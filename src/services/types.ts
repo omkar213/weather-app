@@ -82,7 +82,11 @@ export interface WeatherStore {
   error: string | null;
   loading: boolean;
   coordinates: Coordinates | null;
+  theme: string;
+  favouriteCities: weatherData[];
+  setTheme: (theme: string) => void;
   setInput: (value: string) => void;
+  toggleFavouriteCity: (city: weatherData) => void;
   fetchWeatherByCity: (city: string) => Promise<void>;
   fetchCurrentLocatioWeather: (coords: Coordinates) => Promise<void>;
   fetchForcastWithLatLon: (coords: Coordinates) => Promise<void>;

@@ -1,14 +1,12 @@
 import { Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useWeatherStore } from "../state/useWeatherStore";
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem("theme") || "light";
-  });
+  const { theme, setTheme } = useWeatherStore();
 
   useEffect(() => {
     document.body.classList.toggle("dark", theme === "dark");
-    localStorage.setItem("theme", theme);
   }, [theme]);
 
   return (

@@ -8,6 +8,7 @@ import { useWeatherStore } from "../state/useWeatherStore";
 import TempCard from "../components/TempCard";
 import WeatherLocation from "../components/WeatherLocation";
 import ForcastContainer from "../components/Forcast";
+import FavouriteCityContainer from "../components/FavouriteCityContainer";
 
 const WeatherDashboard = () => {
   const {
@@ -54,7 +55,7 @@ const WeatherDashboard = () => {
         <ForcastContainer data={forecast} />
       </div>
 
-      <div className="favourite-cities-container"></div>
+      <FavouriteCityContainer />
     </div>
   );
 };

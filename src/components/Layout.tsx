@@ -9,12 +9,12 @@ const Layout = ({ children }: PropsWithChildren) => {
 
   return (
     <div className="layout">
-      {loading ||
+      {/* {loading ||
         (isLoading && (
           <div className="loader-overlay">
             <div className="loader"></div>
           </div>
-        ))}
+        ))} */}
 
       <div className="container">
         <Header />

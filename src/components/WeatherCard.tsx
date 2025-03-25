@@ -1,4 +1,6 @@
+import { Star } from "lucide-react";
 import { weatherData } from "../services/types";
+import { useWeatherStore } from "../state/useWeatherStore";
 import { useState } from "react";
 
 interface currentWeatherProps {
@@ -7,6 +9,8 @@ interface currentWeatherProps {
 
 const WeatherCard = ({ data }: currentWeatherProps) => {
   const [unit, setUnit] = useState("C");
+
+  const { favouriteCities, toggleFavouriteCity } = useWeatherStore();
 
   if (!data) {
     return (
@@ -31,14 +35,20 @@ const WeatherCard = ({ data }: currentWeatherProps) => {
     return unit === "C" ? temp - 273.15 : ((temp - 273.15) * 9) / 5 + 32;
   };
 
+  const isFavorite = favouriteCities.some((fav) => fav.id === data.id);
+
   return (
     <div className="weather-card">
-      <button
-        style={{ alignSelf: "flex-end", marginBottom: "20px" }}
-        onClick={handleTempConvert}
-      >
-        Convert to {unit === "C" ? "F" : "C"}
-      </button>
+      <div className="weather-card-header">
+        <button onClick={handleTempConvert}>
+          Convert to {unit === "C" ? "F" : "C"}
+        </button>
+        <Star
+          size={24}
+          onClick={() => toggleFavouriteCity(data)}
+          className={`star-icon ${isFavorite ? "favorite" : ""}`}
+        />
+      </div>
       <div className="d-flex">
         <h1 className="flex-grow-1">
           <span>{convertTemp(main.temp).toFixed(0)}</span>°<span>{unit}</span>
@@ -57,7 +67,7 @@ const WeatherCard = ({ data }: currentWeatherProps) => {
       <br />
       <div className="d-flex">
         <div className="flex-grow-1">
-          <p>
+          <p style={{ textTransform: "capitalize" }}>
             <span>{weather[0].description}</span>
             <br />
             Feels like{" "}

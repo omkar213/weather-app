@@ -6,7 +6,7 @@ import {
   fetchWeatherForcastByCityName,
 } from "../services/weather";
 
-import { WeatherStore, Coordinates } from "../services/types";
+import { WeatherStore, Coordinates, weatherData } from "../services/types";
 
 export const useWeatherStore = create<WeatherStore>((set) => ({
   weather: null,
@@ -15,6 +15,30 @@ export const useWeatherStore = create<WeatherStore>((set) => ({
   error: null,
   loading: false,
   coordinates: null,
+  favouriteCities: [],
+  theme: localStorage.getItem("theme") || "light",
+
+  setTheme: (theme: string) => {
+    localStorage.setItem("theme", theme);
+    document.body.classList.toggle("dark", theme === "dark");
+    set({ theme });
+  },
+
+  toggleFavouriteCity: (city: weatherData) => {
+    set((state) => {
+      const isAlreadyFavourite = state.favouriteCities.some(
+        (fav: weatherData) => fav.id === city.id
+      );
+
+      return {
+        favouriteCities: isAlreadyFavourite
+          ? state.favouriteCities.filter(
+              (fav: weatherData) => fav.id !== city.id
+            )
+          : [...state.favouriteCities, city],
+      };
+    });
+  },
 
   setInput: (value) => set({ input: value }),
 
