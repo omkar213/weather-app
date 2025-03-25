@@ -1,23 +1,19 @@
-import { useEffect, useState } from "react";
-import WeatherCard from "../components/weatherCard/WeatherCard";
-import { forcastDataProps, weatheData } from "../services/types";
+import { useEffect } from "react";
+import WeatherCard from "../components/WeatherCard";
 import useDebounce from "../hooks/useDebounce";
 import { useGeoLocation } from "../hooks/useGeoLocation";
-import ForcastContainer from "../components/Forcast";
 
 //dummy imports
-import { forcastDummyData } from "../data/forcast";
 import { useWeatherStore } from "../state/useWeatherStore";
-import { weatherData } from "../data/weather";
+import TempCard from "../components/TempCard";
+import WeatherLocation from "../components/WeatherLocation";
+import ForcastContainer from "../components/Forcast";
 
 const WeatherDashboard = () => {
   const {
     weather,
     forecast,
     input,
-    setInput,
-    error,
-    loading,
     fetchWeatherByCity,
     fetchCurrentLocatioWeather,
     fetchForcastWithLatLon,
@@ -30,47 +26,35 @@ const WeatherDashboard = () => {
   const debouncedCityValue = useDebounce(input, 1500);
 
   // fetching weatherByCity
-  // useEffect(() => {
-  //   if (debouncedCityValue) {
-  //     fetchWeatherByCity(debouncedCityValue);
-  //     fetchForcastWithCity(debouncedCityValue);
-  //   }
-  // }, [debouncedCityValue, fetchWeatherByCity, fetchForcastWithCity]);
+  useEffect(() => {
+    if (debouncedCityValue) {
+      fetchWeatherByCity(debouncedCityValue);
+      fetchForcastWithCity(debouncedCityValue);
+    }
+  }, [debouncedCityValue, fetchWeatherByCity, fetchForcastWithCity]);
 
   // fetching weather by current location with geoApi
-  // useEffect(() => {
-  //   if (coordinates) {
-  //     fetchCurrentLocatioWeather(coordinates);
-  //     fetchForcastWithLatLon(coordinates);
-  //   }
-  // }, [coordinates, fetchCurrentLocatioWeather, fetchForcastWithLatLon]);
+  useEffect(() => {
+    if (coordinates) {
+      fetchCurrentLocatioWeather(coordinates);
+      fetchForcastWithLatLon(coordinates);
+    }
+  }, [coordinates, fetchCurrentLocatioWeather, fetchForcastWithLatLon]);
 
   return (
     <div className="dashboard-container">
-      <div className="city-weather-data-container">
-        <div className="">
-          <input
-            id="search"
-            type="text"
-            className="search-input"
-            name="search"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type the Name of City"
-          />
+      <div className="weather-data-container">
+        <WeatherLocation data={weather} />
+
+        <div className="weather-info-container">
+          <WeatherCard data={weather} />
+          <TempCard data={weather} />
         </div>
-        <div className="weather-card-container">
-          {/* {weather ? <WeatherCard data={weather} /> : "No Data Available"} */}
-          <WeatherCard data={weatherData[0]} />
-          {/* <div className="local-weather-card"></div> */}
-        </div>
+
+        <ForcastContainer data={forecast} />
       </div>
 
-      <div className="dashboard-feature-container">
-        {/* {forecast && <ForcastContainer data={forecast} />} */}
-        <ForcastContainer data={forcastDummyData[0]} />
-        <div className="week-days-forcast-container"></div>
-      </div>
+      <div className="favourite-cities-container"></div>
     </div>
   );
 };
