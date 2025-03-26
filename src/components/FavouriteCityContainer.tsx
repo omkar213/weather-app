@@ -15,7 +15,6 @@ const FavouriteCityContainer = () => {
         setLoading(false);
       }, 1000);
     }
-    console.log(favouriteCities);
   }, [favouriteCities]);
 
   const convertTemp = (temp: number) => {
@@ -24,7 +23,7 @@ const FavouriteCityContainer = () => {
 
   return (
     <div className="favourite-cities-container">
-      <h2>Forcast in your Favourite Cities</h2>
+      <h2 className="fav-title">Forcast in your Favourite Cities</h2>
 
       {favouriteCities.length === 0 ? (
         <p>No favorite cities added.</p>

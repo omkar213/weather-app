@@ -84,6 +84,7 @@ export interface WeatherStore {
   coordinates: Coordinates | null;
   theme: string;
   favouriteCities: weatherData[];
+  lastSearchedCity: string;
   setTheme: (theme: string) => void;
   setInput: (value: string) => void;
   toggleFavouriteCity: (city: weatherData) => void;

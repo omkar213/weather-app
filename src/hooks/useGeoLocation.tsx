@@ -53,7 +53,7 @@ export function useGeoLocation() {
       switch (error.code) {
         case error.PERMISSION_DENIED:
           errorMessage =
-            "Location permission denied. Please enable location access";
+            "Location permission denied. Please enable location access and Click the Below Refetch Button";
           break;
         case error.POSITION_UNAVAILABLE:
           errorMessage = "Location information is unavailable.";

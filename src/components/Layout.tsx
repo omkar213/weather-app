@@ -17,7 +17,6 @@ const Layout = ({ children }: PropsWithChildren) => {
         ))} */}
 
       <div className="container">
-        <Header />
         <main className="main-container">{children}</main>
       </div>
     </div>
