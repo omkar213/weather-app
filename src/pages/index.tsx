@@ -1,75 +1,117 @@
-import { useEffect, useState } from "react";
-import WeatherCard from "../components/weatherCard/WeatherCard";
-import { forcastDataProps, weatheData } from "../services/types";
-import useDebounce from "../hooks/useDebounce";
+import { useEffect } from "react";
+import WeatherCard from "../components/WeatherCard";
 import { useGeoLocation } from "../hooks/useGeoLocation";
-import ForcastContainer from "../components/Forcast";
 
-//dummy imports
-import { forcastDummyData } from "../data/forcast";
+// Component Imports
 import { useWeatherStore } from "../state/useWeatherStore";
-import { weatherData } from "../data/weather";
+import TempCard from "../components/TempCard";
+import WeatherLocation from "../components/WeatherLocation";
+import ForcastContainer from "../components/Forcast";
+import FavouriteCityContainer from "../components/FavouriteCityContainer";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 const WeatherDashboard = () => {
   const {
     weather,
     forecast,
     input,
+    lastSearchedCity,
     setInput,
-    error,
-    loading,
     fetchWeatherByCity,
     fetchCurrentLocatioWeather,
     fetchForcastWithLatLon,
     fetchForcastWithCity,
+    loading,
+    error,
   } = useWeatherStore();
 
-  const { coordinates, geoLocationerror, getGeoLocation, isLoading } =
-    useGeoLocation();
+  const { coordinates, geoLocationerror, getGeoLocation } = useGeoLocation();
 
-  const debouncedCityValue = useDebounce(input, 1500);
+  // Handle manual search
+  const handleSearch = () => {
+    if (!input.trim()) return;
+    if (input.trim()) {
+      setInput("");
+      fetchWeatherByCity(input);
+      fetchForcastWithCity(input);
+    }
+  };
 
-  // fetching weatherByCity
-  // useEffect(() => {
-  //   if (debouncedCityValue) {
-  //     fetchWeatherByCity(debouncedCityValue);
-  //     fetchForcastWithCity(debouncedCityValue);
-  //   }
-  // }, [debouncedCityValue, fetchWeatherByCity, fetchForcastWithCity]);
-
-  // fetching weather by current location with geoApi
-  // useEffect(() => {
-  //   if (coordinates) {
-  //     fetchCurrentLocatioWeather(coordinates);
-  //     fetchForcastWithLatLon(coordinates);
-  //   }
-  // }, [coordinates, fetchCurrentLocatioWeather, fetchForcastWithLatLon]);
+  // Fetch weather by current location initially
+  useEffect(() => {
+    if (coordinates && !lastSearchedCity) {
+      fetchCurrentLocatioWeather(coordinates);
+      fetchForcastWithLatLon(coordinates);
+    }
+  }, [
+    coordinates,
+    fetchCurrentLocatioWeather,
+    fetchForcastWithLatLon,
+    lastSearchedCity,
+  ]);
 
   return (
-    <div className="dashboard-container">
-      <div className="city-weather-data-container">
-        <div className="">
-          <input
-            id="search"
-            type="text"
-            className="search-input"
-            name="search"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type the Name of City"
-          />
-        </div>
-        <div className="weather-card-container">
-          {/* {weather ? <WeatherCard data={weather} /> : "No Data Available"} */}
-          <WeatherCard data={weatherData[0]} />
-          {/* <div className="local-weather-card"></div> */}
-        </div>
-      </div>
+    <div>
+      <header className="header">
+        <div className="header-container">
+          <h1 className="title">Weather Dashboard</h1>
 
-      <div className="dashboard-feature-container">
-        {/* {forecast && <ForcastContainer data={forecast} />} */}
-        <ForcastContainer data={forcastDummyData[0]} />
-        <div className="week-days-forcast-container"></div>
+          <div className="header-actions">
+            <div className="search-form">
+              <input
+                type="search"
+                placeholder="Search City..."
+                className="search-input"
+                id="search-input"
+                value={input}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                }}
+              />
+              <button
+                className="search-btn"
+                disabled={loading}
+                onClick={handleSearch}
+              >
+                {loading ? "Searching" : "Search"}
+              </button>
+            </div>
+
+            <ThemeToggle />
+          </div>
+        </div>
+      </header>
+
+      <div className="dashboard-container">
+        <div className="weather-data-container">
+          {loading ? (
+            <div className="loading-indicator">
+              <div className="loader"></div>
+            </div>
+          ) : error || geoLocationerror ? (
+            <div className="error-message">
+              {error ? error : geoLocationerror}
+              {geoLocationerror && (
+                <button className="refetch-btn" onClick={getGeoLocation}>
+                  Refetch
+                </button>
+              )}
+            </div>
+          ) : (
+            <>
+              <WeatherLocation data={weather} />
+
+              <div className="weather-info-container">
+                <WeatherCard data={weather} />
+                <TempCard data={weather} />
+              </div>
+
+              <ForcastContainer data={forecast} />
+            </>
+          )}
+        </div>
+
+        <FavouriteCityContainer />
       </div>
     </div>
   );

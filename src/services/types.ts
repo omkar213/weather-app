@@ -21,6 +21,7 @@ export interface weatherData {
     temp_max: number;
     pressure: number;
     humidity: number;
+    sea_level: number;
   };
   visibility?: number;
   wind?: {
@@ -81,7 +82,12 @@ export interface WeatherStore {
   error: string | null;
   loading: boolean;
   coordinates: Coordinates | null;
+  theme: string;
+  favouriteCities: weatherData[];
+  lastSearchedCity: string;
+  setTheme: (theme: string) => void;
   setInput: (value: string) => void;
+  toggleFavouriteCity: (city: weatherData) => void;
   fetchWeatherByCity: (city: string) => Promise<void>;
   fetchCurrentLocatioWeather: (coords: Coordinates) => Promise<void>;
   fetchForcastWithLatLon: (coords: Coordinates) => Promise<void>;

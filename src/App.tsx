@@ -4,13 +4,11 @@ import WeatherDashboard from "./pages";
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <Layout>
-          <WeatherDashboard />
-        </Layout>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Layout>
+        <WeatherDashboard />
+      </Layout>
+    </BrowserRouter>
   );
 }
 
