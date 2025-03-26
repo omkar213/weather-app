@@ -3,8 +3,7 @@ import { useWeatherStore } from "../state/useWeatherStore";
 import { getCountryName } from "../utils";
 
 const FavouriteCityContainer = () => {
-  const [unit, setUnit] = useState("C");
-
+  const [unit] = useState("C");
   const { favouriteCities } = useWeatherStore();
   const [loading, setLoading] = useState(false);
 
@@ -23,25 +22,27 @@ const FavouriteCityContainer = () => {
 
   return (
     <div className="favourite-cities-container">
-      <h2 className="fav-title">Forcast in your Favourite Cities</h2>
+      <h2 className="fav-title">Forecast in your Favourite Cities</h2>
 
-      {favouriteCities.length === 0 ? (
+      {loading ? (
+        <p>Loading favourite cities...</p>
+      ) : favouriteCities.length === 0 ? (
         <p>No favorite cities added.</p>
       ) : (
         <div className="items-wrapper">
-          {favouriteCities.map((city) => (
-            <div className="fav-item-container">
-              <div className="">
+          {favouriteCities.map((city, index) => (
+            <div key={index} className="fav-item-container">
+              <div>
                 <p>{city?.name}</p>
                 <p>{getCountryName(city?.sys?.country)}</p>
               </div>
               {city?.weather[0]?.icon && (
                 <img
                   src={`https://openweathermap.org/img/wn/${city?.weather[0]?.icon}@2x.png`}
-                  alt=""
+                  alt={city?.weather[0]?.description}
                 />
               )}
-              <div className="">
+              <div>
                 <span>{convertTemp(city?.main?.temp).toFixed(0)}</span>°
                 <span>{unit}</span>
                 <p>{city?.weather[0]?.description}</p>
